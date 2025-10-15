@@ -89,7 +89,7 @@ public CorsConfigurationSource corsConfigurationSource() {
     config.setAllowedOrigins(List.of(
         "http://localhost:3000",
         "http://localhost:5173",
-        "https://elaborate-eclair-2365b8.netlify.app"  //  Netlify frontend
+        "https://khajamoinuddin-ecommerce-website.netlify.app"  //  Netlify frontend
     ));
 
     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
