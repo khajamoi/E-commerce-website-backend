@@ -57,19 +57,22 @@ public class WebSecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                //  public endpoints
+                // ✅ public endpoints
                 .requestMatchers(
-                    "/auth/**",          // Updated: remove /api if your controllers are mapped without /api
-                    "/products/**",
+                    "/api/auth/**",
+                    "/api/products/**",
                     "/v3/api-docs/**",
                     "/swagger-ui/**",
                     "/swagger-ui.html"
                 ).permitAll()
-                //  Excel template & import before `/admin/**`
-                .requestMatchers("/admin/reports/template", "/admin/reports/import").permitAll()
-                //  all other admin endpoints require ADMIN
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                //  any other request needs authentication
+
+                // ✅ Excel template & import must be before `/api/admin/**`
+                .requestMatchers("/api/admin/reports/template", "/api/admin/reports/import").permitAll()
+
+                // ✅ all other admin endpoints require ADMIN
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                // ✅ any other request needs authentication
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authenticationProvider())
@@ -81,15 +84,8 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-
-        // Add your deployed frontend URLs
-        config.setAllowedOrigins(List.of(
-            "http://localhost:3000",
-            "http://localhost:5173",
-            "https://elaborate-eclair-2365b8.netlify.app",
-            "https://khajamoinuddin-ecommerce-website.netlify.app"
-        ));
-
+        config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173", "https://elaborate-eclair-2365b8.netlify.app",
+            "https://khajamoinuddin-ecommerce-website.netlify.app"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
